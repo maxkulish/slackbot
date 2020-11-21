@@ -5,11 +5,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/maxkulish/slackbot/templates"
+
+	"github.com/maxkulish/slackbot/config"
 
 	"github.com/maxkulish/slackbot/localip"
 )
@@ -24,6 +29,15 @@ type WebHook struct {
 }
 
 func main() {
+
+	conFile := flag.String("conf", "./config.yml", "Path to the config.yml file")
+	help := flag.Bool("help", false, templates.HelpMessage)
+	flag.Parse()
+
+	if *help {
+		fmt.Println(templates.HelpMessage)
+		os.Exit(0)
+	}
 
 	hostname, err := os.Hostname()
 	if err != nil {
@@ -43,7 +57,12 @@ func main() {
 
 	msg := prepareMessage(hostname, inputText, ips)
 
-	err = SendSlackNotification(webhookUrl, msg)
+	conf, err := config.NewConfig(*conFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = SendSlackNotification(conf.WebHook.URL+conf.WebHook.Secret, msg)
 	if err != nil {
 		log.Fatal(err)
 	}
