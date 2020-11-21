@@ -30,7 +30,7 @@ type WebHook struct {
 
 func main() {
 
-	conFile := flag.String("conf", "./config.yml", "Path to the config.yml file")
+	conFile := flag.String("conf", "/etc/slackbot/config.yml", "Path to the config.yml file")
 	help := flag.Bool("help", false, templates.HelpMessage)
 	flag.Parse()
 
