@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build:
+  build_linux:
     name: Build Slackbot for Linux
     runs-on: ubuntu-latest
     steps:
@@ -43,3 +43,32 @@ jobs:
       with:
         name: slackbot_amd64_linux
         path: /home/runner/work/slackbot/slackbot/bin/linux/slackbot
+
+  build_mac:
+    name: Build Slackbot for MacOS
+    runs-on: macos-11.0
+    steps:
+
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.15
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Get dependencies
+        run: |
+          go get -v -t -d ./...
+
+      - name: Test
+        run: make test
+
+      - name: Build
+        run: make build_mac
+
+      - name: Upload a MacOS Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: slackbot_amd64_darwin
+          path: /home/runner/work/slackbot/slackbot/bin/macos/slackbot
