@@ -71,4 +71,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: slackbot_amd64_darwin
-          path: /home/runner/work/slackbot/slackbot/bin/macos/slackbot
+          path: /Users/runner/work/slackbot/slackbot/bin/macos/slackbot
