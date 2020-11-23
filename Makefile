@@ -19,7 +19,7 @@ build: clean
 
 build_mac:
 	cd $(ROOT_DIR)
-	GOOS=darwin GOARCH=amd64 go build --race -o $(BIN_DIR)/macOS/$(PROJ_NAME) cmd/main.go
+	GOOS=darwin GOARCH=amd64 go build --race -o $(BIN_DIR)/macos/$(PROJ_NAME) cmd/main.go
 
 build_linux:
 	cd $(ROOT_DIR)
