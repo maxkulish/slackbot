@@ -37,11 +37,11 @@ jobs:
           name: slackbot_amd64_darwin
           path: /Users/runner/work/slackbot/slackbot/bin/macos/slackbot
 
-  release_mac_linux:
-    name: Create Linux Release
+  build_linux:
+    name: Build Slackbot for Linux
     runs-on: ubuntu-latest
-    needs: build_mac
     steps:
+
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
         with:
@@ -58,16 +58,32 @@ jobs:
         run: make test
 
       - name: Build
-        run: |
-          make build_linux
-          make zip_linux
+        run: make build_linux
 
+      - name: Upload a Linux Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: slackbot_amd64_linux
+          path: /home/runner/work/slackbot/slackbot/bin/linux/slackbot
+
+  release_mac_linux:
+    name: Create Linux Release
+    runs-on: ubuntu-latest
+    needs: [build_mac, build_linux]
+    steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/download-artifact@v2
+      - name: Download MacOS artifacts
+        uses: actions/download-artifact@v2
         with:
           name: slackbot_amd64_darwin
           path: ./slackbot_amd64_darwin.zip
+
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: slackbot_amd64_linux
+          path: ./slackbot_amd64_linux.zip
 
       - name: Display structure of downloaded files
         run: ls -R
@@ -91,7 +107,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./slackbot_linux.zip
+          asset_path: ./slackbot_amd64_linux.zip
           asset_name: slackbot_amd64_linux.zip
           asset_content_type: application/zip
 
