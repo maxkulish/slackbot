@@ -43,4 +43,4 @@ coverage:
 
 zip_linux:
 	cd $(ROOT_DIR)
-	zip --binary $(BIN_DIR)/linux/$(PROJ_NAME) --out $(BIN_DIR)/linux/$(PROJ_NAME).zip
+	zip $(BIN_DIR)/linux/$(PROJ_NAME) --out $(BIN_DIR)/linux/$(PROJ_NAME).zip
