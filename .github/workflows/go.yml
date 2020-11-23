@@ -1,0 +1,40 @@
+name: Go
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    name: Build Slackbot for Linux
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.15
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./...
+    
+    - name: Test
+      run: make test
+
+    - name: Build
+      run: make build_linux
+
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2.0.6
+      with:
+        # Artifact name
+        name: slackbot_amd64_linux
+        # Destination path
+        path: /bin/linux/slackbot
