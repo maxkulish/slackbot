@@ -8,16 +8,65 @@ on:
 name: Create Release
 
 jobs:
+  build_mac:
+    name: Build Slackbot for MacOS
+    runs-on: macos-11.0
+    steps:
+
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.15
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Get dependencies
+        run: |
+          go get -v -t -d ./...
+
+      - name: Test
+        run: make test
+
+      - name: Build
+        run: make build_mac
+
+      - name: Upload a MacOS Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: slackbot_amd64_darwin
+          path: /Users/runner/work/slackbot/slackbot/bin/macos/slackbot
+
   release_linux:
     name: Create Linux Release
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.15
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Get dependencies
+        run: |
+          go get -v -t -d ./...
+
+      - name: Test
+        run: make test
+
+      - name: Build
+        run: |
+          make build_linux
+          make zip_linux
+
       - uses: actions/checkout@v2
 
-      - name: Dowload Linux Artifacts
-        uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v2
         with:
-          name: slackbot_amd64_linux
+          name: slackbot_amd64_darwin
+          path: ./slackbot_amd64_darwin.zip
 
       - name: Display structure of downloaded files
         run: ls -R
@@ -52,6 +101,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./slackbot_mac.zip
-          asset_name: slackbot_amd64_mac.zip
+          asset_path: ./slackbot_amd64_darwin.zip
+          asset_name: slackbot_amd64_darwin.zip
           asset_content_type: application/zip
