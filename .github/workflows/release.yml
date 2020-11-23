@@ -37,9 +37,10 @@ jobs:
           name: slackbot_amd64_darwin
           path: /Users/runner/work/slackbot/slackbot/bin/macos/slackbot
 
-  release_linux:
+  release_mac_linux:
     name: Create Linux Release
     runs-on: ubuntu-latest
+    needs: build_mac
     steps:
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
