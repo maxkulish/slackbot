@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - uses: actions/cache@v2
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
@@ -34,5 +41,5 @@ jobs:
     - name: Upload a Linux Build Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: slackbot_amd64_linux.zip
+        name: slackbot_amd64_linux
         path: /home/runner/work/slackbot/slackbot/bin/linux/slackbot
