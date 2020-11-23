@@ -43,4 +43,4 @@ coverage:
 
 zip_linux:
 	cd $(ROOT_DIR)
-	zip $(BIN_DIR)/linux/$(PROJ_NAME) --out $(BIN_DIR)/linux/$(PROJ_NAME).zip
+	zip --junk-paths $(BIN_DIR)/linux/$(PROJ_NAME)
