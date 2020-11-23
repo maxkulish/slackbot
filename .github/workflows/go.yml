@@ -29,12 +29,10 @@ jobs:
       run: make test
 
     - name: Build
-      run: make build_linux
+      run: make build
 
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v2.0.6
+    - name: Upload a Linux Build Artifact
+      uses: actions/upload-artifact@v2
       with:
-        # Artifact name
-        name: slackbot_amd64_linux
-        # Destination path
+        name: slackbot_amd64_linux.zip
         path: /home/runner/work/slackbot/slackbot/bin/linux/slackbot
