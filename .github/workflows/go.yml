@@ -37,4 +37,4 @@ jobs:
         # Artifact name
         name: slackbot_amd64_linux
         # Destination path
-        path: /bin/linux/slackbot
+        path: /home/runner/work/slackbot/slackbot/bin/linux/slackbot
