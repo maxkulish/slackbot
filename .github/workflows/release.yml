@@ -89,7 +89,7 @@ jobs:
         run: zip slackbot_amd64_linux.zip ./slackbot_linux/slackbot
 
       - name: Archive MacOS artifact
-          run: zip slackbot_amd64_darwin.zip ./slackbot_darwin/slackbot
+        run: zip slackbot_amd64_darwin.zip ./slackbot_darwin/slackbot
 
       - name: Display structure of downloaded files
         run: ls -R
