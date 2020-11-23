@@ -35,7 +35,7 @@ jobs:
           prerelease: false
 
       - name: Upload Linux Release Asset
-        id: upload-release-asset
+        id: upload-linux-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,8 +45,8 @@ jobs:
           asset_name: slackbot_amd64_linux.zip
           asset_content_type: application/zip
 
-      - name: Upload Release Asset
-        id: upload-release-asset
+      - name: Upload MacOS Release Asset
+        id: upload-mac-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
