@@ -40,3 +40,7 @@ coverage:
 	cd $(ROOT_DIR)
 	go test -coverprofile=coverage.out
 	go tool cover -html=coverage.out
+
+zip_linux:
+	cd $(ROOT_DIR)
+	zip --binary $(BIN_DIR)/linux/$(PROJ_NAME) --out $(BIN_DIR)/linux/$(PROJ_NAME).zip
