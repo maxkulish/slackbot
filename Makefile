@@ -43,4 +43,8 @@ coverage:
 
 zip_linux:
 	cd $(ROOT_DIR)
-	zip --junk-paths $(BIN_DIR)/linux/$(PROJ_NAME)
+	zip $(PROJ_NAME)_linux.zip $(BIN_DIR)/linux/$(PROJ_NAME)
+
+zip_mac:
+	cd $(ROOT_DIR)
+	zip $(PROJ_NAME)_mac.zip $(BIN_DIR)/macos/$(PROJ_NAME)
