@@ -23,11 +23,6 @@ type SlackRequestBody struct {
 	Text string `json:"text"`
 }
 
-type WebHook struct {
-	URL    string
-	Secret string
-}
-
 func main() {
 
 	conFile := flag.String("conf", "/etc/slackbot/config.yml", "Path to the config.yml file")
