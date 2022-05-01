@@ -63,7 +63,7 @@ func main() {
 	}
 }
 
-// SendSlackNotification will post to an 'Incoming Webook' url setup in Slack Apps. It accepts
+// SendSlackNotification will post to an 'Incoming Webhook' url setup in Slack Apps. It accepts
 // some text and the slack channel is saved within Slack.
 func SendSlackNotification(webhookUrl string, msg string) error {
 
@@ -84,7 +84,7 @@ func SendSlackNotification(webhookUrl string, msg string) error {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
 	if buf.String() != "ok" {
-		return errors.New("Non-ok response returned from Slack")
+		return errors.New("non-ok response returned from Slack")
 	}
 	return nil
 }
