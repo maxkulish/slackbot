@@ -1,18 +1,14 @@
+// Package config provides functionality to load configuration settings.
 package config
 
 import (
-	"io/ioutil"
+	"os"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
-type WebHook struct {
-	URL    string `yaml:"url"`
-	Secret string `yaml:"secret"`
-}
-
 type Config struct {
-	WebHook *WebHook `yaml:"webhook"`
+	WebHook string `yaml:"webhook"`
 }
 
 // NewConfig loads config from config_env.yml file
@@ -20,7 +16,7 @@ func NewConfig(cf string) (*Config, error) {
 
 	c := &Config{}
 
-	confFile, err := ioutil.ReadFile(cf)
+	confFile, err := os.ReadFile(cf)
 	if err != nil {
 		return nil, err
 	}
