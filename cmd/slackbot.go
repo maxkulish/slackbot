@@ -7,7 +7,6 @@ package slackbot
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/maxkulish/slackbot/config"
@@ -16,44 +15,69 @@ import (
 	"github.com/maxkulish/slackbot/templates"
 )
 
-// CMD represents the command line structure.
 type CMD struct {
-	ConFile string
-	Help    bool
+	ConfigFile string
+	Help       bool
 }
 
-// Run executes the main application logic.
-func (c *CMD) Run() {
+func (c *CMD) Run() error {
 	if c.Help {
 		fmt.Println(templates.HelpMessage)
-		os.Exit(0)
+		return nil
 	}
 
-	hostname, err := os.Hostname()
+	hostname, err := c.getHostname()
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("failed to get hostname: %w", err)
 	}
 
 	ips, err := localip.GetLocalIPAddr()
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("failed to get IP addresses: %w", err)
 	}
 
-	var inputText string
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		inputText += "\n" + scanner.Text()
+	inputText, err := c.readInputText()
+	if err != nil {
+		return fmt.Errorf("failed to read input text: %w", err)
 	}
 
 	msg := slack.PrepareMessage(hostname, inputText, ips)
 
-	conf, err := config.NewConfig(c.ConFile)
+	conf, err := config.NewConfig(c.ConfigFile)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("failed to load configuration: %w", err)
 	}
 
-	err = slack.SendSlackNotification(conf.WebHook, msg)
-	if err != nil {
-		log.Fatal(err)
+	if err = slack.SendSlackNotification(conf.WebHook, msg); err != nil {
+		return fmt.Errorf("failed to send Slack notification: %w", err)
 	}
+
+	return nil
+}
+
+func (c *CMD) getHostname() (string, error) {
+	return os.Hostname()
+}
+
+func (c *CMD) readInputText() (string, error) {
+	fileInfo, err := os.Stdin.Stat()
+	if err != nil {
+		return "", fmt.Errorf("failed to stat stdin: %w", err)
+	}
+
+	// Check if data is available on stdin (e.g., piped input or redirect)
+	if fileInfo.Mode()&os.ModeCharDevice == 0 {
+		var inputText string
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			inputText += "\n" + scanner.Text()
+		}
+		if err := scanner.Err(); err != nil {
+			return "", fmt.Errorf("error reading stdin: %w", err)
+		}
+		return inputText, nil
+	}
+
+	// No data available on stdin; don't block waiting for input
+	return "", nil
 }

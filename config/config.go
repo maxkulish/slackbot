@@ -13,7 +13,6 @@ type Config struct {
 
 // NewConfig loads config from config_env.yml file
 func NewConfig(cf string) (*Config, error) {
-
 	c := &Config{}
 
 	confFile, err := os.ReadFile(cf)
