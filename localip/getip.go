@@ -2,7 +2,10 @@
 package localip
 
 import (
+	"bytes"
+	"io"
 	"net"
+	"net/http"
 )
 
 // IPAddrInfo holds information about an IP address
@@ -45,4 +48,20 @@ func GetLocalIPAddr() (ips []IPAddrInfo, err error) {
 
 	}
 	return ipAddresses, nil
+}
+
+// GetPublicIPAddr sends a request to checkip.amazonaws.com and returns the public IP address as a string.
+func GetPublicIPAddr() (string, error) {
+	resp, err := http.Get("https://checkip.amazonaws.com")
+	if err != nil {
+		return "", err // Return an empty string and the error
+	}
+	defer resp.Body.Close() // Ensure we close the response body
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err // Return an empty string and the error
+	}
+
+	return string(bytes.TrimSpace(body)), nil // Return the response body as a string
 }

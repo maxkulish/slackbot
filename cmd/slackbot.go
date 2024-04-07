@@ -7,6 +7,7 @@ package slackbot
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/maxkulish/slackbot/config"
@@ -36,6 +37,14 @@ func (c *CMD) Run() error {
 		return fmt.Errorf("failed to get IP addresses: %w", err)
 	}
 
+	// Get public IP address
+	publicIP, err := localip.GetPublicIPAddr()
+	if err != nil {
+		log.Printf("failed to get public IP address: %v", err)
+	} else {
+		ips = append(ips, localip.IPAddrInfo{Address: publicIP, Version: "IPv4"})
+	}
+
 	inputText, err := c.readInputText()
 	if err != nil {
 		return fmt.Errorf("failed to read input text: %w", err)
@@ -44,6 +53,9 @@ func (c *CMD) Run() error {
 	}
 
 	msg := slack.PrepareMessage(hostname, inputText, ips)
+	if err != nil {
+		return fmt.Errorf("failed to prepare message: %w", err)
+	}
 
 	conf, err := config.NewConfig(c.ConfigFile)
 	if err != nil {
