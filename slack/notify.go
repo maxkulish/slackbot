@@ -83,7 +83,7 @@ func PrepareIPList(ips []localip.IPAddrInfo) string {
 	}
 	if len(localIPs) > 0 {
 		if message.Len() > 0 {
-			message.WriteString(" :internet-problems: ")
+			message.WriteString(" :house: ")
 		}
 		message.WriteString(strings.Join(localIPs, ", "))
 	}
