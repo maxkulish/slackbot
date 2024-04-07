@@ -39,6 +39,8 @@ func (c *CMD) Run() error {
 	inputText, err := c.readInputText()
 	if err != nil {
 		return fmt.Errorf("failed to read input text: %w", err)
+	} else if inputText == "" {
+		return fmt.Errorf("no input text provided")
 	}
 
 	msg := slack.PrepareMessage(hostname, inputText, ips)

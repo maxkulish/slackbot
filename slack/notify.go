@@ -59,10 +59,10 @@ func PrepareMessage(hostname, text string, ips []localip.IPAddrInfo) string {
 	default:
 		strIPs.WriteString("IPs: ")
 		for i, ip := range ips {
-			if i > 0 {
+			if i > 0 && ip.Version == "IPv4" {
 				strIPs.WriteString(", ") // Add comma and space before each entry except the first
+				strIPs.WriteString(fmt.Sprintf("`%s`", ip.Address))
 			}
-			strIPs.WriteString(fmt.Sprintf("`%s`", ip))
 		}
 	}
 
