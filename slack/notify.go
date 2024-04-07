@@ -122,6 +122,7 @@ func PrepareIPList(ips []localip.IPAddrInfo) string {
 func PrepareMessage(hostname, message string, ips []localip.IPAddrInfo) SlackMessage {
 
 	ipList := PrepareIPList(ips)
+	date := time.Now().Format("2006-01-02 15:04:05")
 
 	return SlackMessage{
 		Text: "Danny Torrence left a 1 star review for your property.",
@@ -131,12 +132,9 @@ func PrepareMessage(hostname, message string, ips []localip.IPAddrInfo) SlackMes
 				Elements: []Element{
 					{
 						Type: "mrkdwn",
-						Text: fmt.Sprintf(":calendar: *November 12, 2019*  |  :computer: %s", hostname),
+						Text: fmt.Sprintf(":calendar: *%s*  |  :computer: %s", date, hostname),
 					},
 				},
-			},
-			{
-				Type: "divider",
 			},
 			{
 				Type: "section",
