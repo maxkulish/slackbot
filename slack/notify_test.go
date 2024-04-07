@@ -14,6 +14,7 @@ func TestPrepareIPList(t *testing.T) {
 		{
 			Address: "192.168.1.1",
 			Version: "IPv4",
+			Local:   true,
 		},
 	}
 
@@ -21,14 +22,17 @@ func TestPrepareIPList(t *testing.T) {
 		{
 			Address: "192.168.1.1",
 			Version: "IPv4",
+			Local:   true,
 		},
 		{
 			Address: "127.0.0.1",
 			Version: "IPv4",
+			Local:   true,
 		},
 		{
 			Address: "14.89.76.251",
 			Version: "IPv4",
+			Local:   false,
 		},
 	}
 
@@ -36,10 +40,12 @@ func TestPrepareIPList(t *testing.T) {
 		{
 			Address: "192.168.1.1",
 			Version: "IPv4",
+			Local:   true,
 		},
 		{
 			Address: "fe80::8811:86eb:a566:5033",
 			Version: "IPv6",
+			Local:   true,
 		},
 	}
 

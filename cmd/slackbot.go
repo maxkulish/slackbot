@@ -42,7 +42,7 @@ func (c *CMD) Run() error {
 	if err != nil {
 		log.Printf("failed to get public IP address: %v", err)
 	} else {
-		ips = append(ips, localip.IPAddrInfo{Address: publicIP, Version: "IPv4"})
+		ips = append(ips, publicIP)
 	}
 
 	inputText, err := c.readInputText()

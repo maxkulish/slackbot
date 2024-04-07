@@ -63,32 +63,35 @@ func SendSlackNotification(webhookUrl string, message SlackMessage) error {
 	return nil
 }
 
-// PrepareIPList formats a slice of IPAddrInfo into a string.
-// For an empty slice, it returns "`unknown`". For a single IP address, it returns that IP
-// wrapped in backticks. For multiple IPs, it filters and formats only the IPv4 addresses,
-// separating them with commas and enclosing each in backticks. IPv6 addresses are ignored.
+// PrepareIPList creates a message string based on the types of IPs present.
 func PrepareIPList(ips []localip.IPAddrInfo) string {
-	var strIPs strings.Builder
+	var publicIPs, localIPs []string
 
-	switch len(ips) {
-	case 0:
-		strIPs.WriteString("`unknown`")
-	case 1:
-		strIPs.WriteString(fmt.Sprintf("`%s`", ips[0].Address))
-	default:
-		firstIPv4Added := false
-		for _, ip := range ips {
-			if ip.Version == "IPv4" {
-				if firstIPv4Added {
-					strIPs.WriteString(", ") // Add comma and space before each entry except the first
-				}
-				strIPs.WriteString(fmt.Sprintf("`%s`", ip.Address))
-				firstIPv4Added = true
+	for _, ip := range ips {
+		if ip.Version == "IPv4" {
+			if ip.Local {
+				localIPs = append(localIPs, fmt.Sprintf("`%s`", ip.Address))
+			} else {
+				publicIPs = append(publicIPs, fmt.Sprintf("`%s`", ip.Address))
 			}
 		}
 	}
 
-	return strIPs.String()
+	var message strings.Builder
+	if len(publicIPs) > 0 {
+		message.WriteString(fmt.Sprintf(":globe_with_meridians: %s\n", strings.Join(publicIPs, ", ")))
+	}
+	if len(localIPs) > 0 {
+		if message.Len() > 0 {
+			message.WriteString(" :internet-problems: ")
+		}
+		message.WriteString(strings.Join(localIPs, ", "))
+	}
+
+	if message.Len() == 0 {
+		return "`unknown`" // Fallback message if no IPs are provided or they're all IPv6.
+	}
+	return message.String()
 }
 
 // PrepareMessage creates a SlackMessage struct filled with dynamic IP list, hostname, and custom message.
@@ -114,7 +117,7 @@ func PrepareMessage(hostname, message string, ips []localip.IPAddrInfo) SlackMes
 				Type: "section",
 				Text: &TextBlock{
 					Type: "mrkdwn",
-					Text: fmt.Sprintf(":information_source: *IPv4* %s", ipList),
+					Text: ipList,
 				},
 			},
 			{

@@ -13,6 +13,7 @@ import (
 type IPAddrInfo struct {
 	Address string
 	Version string
+	Local   bool
 }
 
 // GetLocalIPAddr allows to get local IPv4 or IPv6 address
@@ -40,9 +41,17 @@ func GetLocalIPAddr() (ips []IPAddrInfo, err error) {
 			}
 
 			if ipnet.IP.To4() != nil {
-				ipAddresses = append(ipAddresses, IPAddrInfo{Address: ipnet.IP.String(), Version: "IPv4"})
+				ipAddresses = append(ipAddresses, IPAddrInfo{
+					Address: ipnet.IP.String(),
+					Version: "IPv4",
+					Local:   true,
+				})
 			} else if ipnet.IP.To16() != nil {
-				ipAddresses = append(ipAddresses, IPAddrInfo{Address: ipnet.IP.String(), Version: "IPv6"})
+				ipAddresses = append(ipAddresses, IPAddrInfo{
+					Address: ipnet.IP.String(),
+					Version: "IPv6",
+					Local:   true,
+				})
 			}
 		}
 
@@ -51,17 +60,31 @@ func GetLocalIPAddr() (ips []IPAddrInfo, err error) {
 }
 
 // GetPublicIPAddr sends a request to checkip.amazonaws.com and returns the public IP address as a string.
-func GetPublicIPAddr() (string, error) {
+func GetPublicIPAddr() (IPAddrInfo, error) {
 	resp, err := http.Get("https://checkip.amazonaws.com")
 	if err != nil {
-		return "", err // Return an empty string and the error
+		return IPAddrInfo{}, err
 	}
 	defer resp.Body.Close() // Ensure we close the response body
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return "", err // Return an empty string and the error
+		return IPAddrInfo{}, err
 	}
 
-	return string(bytes.TrimSpace(body)), nil // Return the response body as a string
+	netIP := net.ParseIP(string(bytes.TrimSpace(body)))
+	if netIP == nil {
+		return IPAddrInfo{}, err
+	}
+
+	ipType := "IPv6"
+	if netIP.To4() != nil {
+		ipType = "IPv4"
+	}
+
+	return IPAddrInfo{
+		Address: netIP.String(),
+		Version: ipType,
+		Local:   false,
+	}, nil // Return the IPAddrInfo struct and error as nil
 }
