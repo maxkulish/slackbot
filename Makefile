@@ -38,20 +38,16 @@ rebuild:
 	go build -o $(BIN_DIR)/$(PROJ_NAME) main.go
 
 build_mac_amd64:
-	cd $(ROOT_DIR)
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build --race -o $(MAC_BIN_AMD) cmd/main.go
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build --race -o $(MAC_BIN_AMD) main.go
 
 build_mac_arm64:
-	cd $(ROOT_DIR)
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build --race -o $(MAC_BIN_ARM) cmd/main.go
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build --race -o $(MAC_BIN_ARM) main.go
 
 build_linux_amd64:
-	cd $(ROOT_DIR)
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(LINUX_BIN_AMD) cmd/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(LINUX_BIN_AMD) main.go
 
 build_linux_arm64:
-	cd $(ROOT_DIR)
-	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(LINUX_BIN_ARM) cmd/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o $(LINUX_BIN_ARM) main.go
 
 clean:
 	rm -rf ./bin
