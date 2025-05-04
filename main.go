@@ -22,7 +22,7 @@ func main() {
 	if configPath == "" {
 		// If the environment variable is not set, inform and use the flag or default value
 		log.Println("SLACKBOT_CONFIG environment variable is empty; reading from the config file")
-		flag.StringVar(&c.ConfigFile, "config", "/etc/yourproject/default.yml", "Path to the config file")
+		flag.StringVar(&c.ConfigFile, "config", "/etc/slackbot/config.yml", "Path to the config file")
 	} else {
 		// Environment variable is set, use it directly and log the usage
 		c.ConfigFile = configPath
