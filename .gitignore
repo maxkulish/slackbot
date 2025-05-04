@@ -22,3 +22,5 @@ _test
 # Editor files
 *.iml
 *.swp
+
+**/.claude/settings.local.json
