@@ -37,13 +37,13 @@ type Element struct {
 }
 
 // SendSlackNotification sends a structured message to a Slack webhook.
-func SendSlackNotification(webhookUrl string, message SlackMessage) error {
+func SendSlackNotification(webhookURL string, message SlackMessage) error {
 	payloadBytes, err := json.Marshal(message)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, webhookUrl, bytes.NewBuffer(payloadBytes))
+	req, err := http.NewRequest(http.MethodPost, webhookURL, bytes.NewBuffer(payloadBytes))
 	if err != nil {
 		return err
 	}
@@ -100,7 +100,7 @@ func PrepareMessage(hostname, message string, ips []localip.IPAddrInfo) SlackMes
 	}
 
 	return SlackMessage{
-		Text: fmt.Sprintf("%s", message),
+		Text: message,
 		Blocks: []Block{
 			{
 				Type: "context",
